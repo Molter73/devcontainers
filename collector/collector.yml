@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collector-builder
+  labels:
+    app: collector-builder
+spec:
+  selector:
+    matchLabels:
+      app: collector-builder
+  replicas: 1
+  template:
+    metadata:
+      name: collector-builder
+      labels:
+        app: collector-builder
+    spec:
+      containers:
+      - name: collector-builder
+        image: quay.io/stackrox-io/collector-builder:cache
+        imagePullPolicy: Never
+        workingDir: ${HOME}/go/src/github.com/stackrox/collector
+        env:
+        - name: CMAKE_EXPORT_COMPILE_COMMANDS
+          value: "ON"
+        command:
+        - /bin/bash
+        stdin: true
+        volumeMounts:
+        - name: collector-repo
+          mountPath: ${HOME}/go/src/github.com/stackrox/collector
+      volumes:
+        - name: collector-repo
+          hostPath:
+            path: ${HOME}/go/src/github.com/stackrox/collector

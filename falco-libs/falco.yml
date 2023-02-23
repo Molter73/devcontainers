@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: libs-builder
+  labels:
+    app: libs-builder
+spec:
+  selector:
+    matchLabels:
+      app: libs-builder
+  replicas: 1
+  template:
+    metadata:
+      name: libs-builder
+      labels:
+        app: libs-builder
+    spec:
+      containers:
+      - name: libs-builder
+        image: falco-fedora:latest
+        imagePullPolicy: Never
+        workingDir: ${HOME}/go/src/github.com/falcosecurity/libs
+        securityContext:
+          privileged: true
+        env:
+        - name: CMAKE_EXPORT_COMPILE_COMMANDS
+          value: "ON"
+        command:
+        - /bin/bash
+        stdin: true
+        volumeMounts:
+        - name: libs-repo
+          mountPath: ${HOME}/go/src/github.com/falcosecurity/libs
+        - name: src
+          mountPath: /usr/src
+        - name: modules
+          mountPath: /lib/modules
+        - name: bpf
+          mountPath: /usr/include/bpf
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: dev
+          mountPath: /dev
+      volumes:
+        - name: libs-repo
+          hostPath:
+            path: ${HOME}/go/src/github.com/falcosecurity/libs
+        - name: src
+          hostPath:
+            path: /usr/src
+        - name: modules
+          hostPath:
+            path: /lib/modules
+        - name: bpf
+          hostPath:
+            path: /usr/include/bpf
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: dev
+          hostPath:
+            path: /dev
