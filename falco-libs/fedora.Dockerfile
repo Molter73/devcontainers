@@ -19,6 +19,8 @@ RUN dnf install -y \
     which \
     perl-core \
     clang \
+    procps \
+    python3-pip \
     kmod \
 # Debugging packages
     gdb \

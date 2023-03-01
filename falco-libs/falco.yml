@@ -25,6 +25,8 @@ spec:
         env:
         - name: CMAKE_EXPORT_COMPILE_COMMANDS
           value: "ON"
+        - name: HOST_ROOT
+          value: /host
         command:
         - /bin/bash
         stdin: true
@@ -40,7 +42,20 @@ spec:
         - name: docker-sock
           mountPath: /var/run/docker.sock
         - name: dev
-          mountPath: /dev
+          mountPath: /host/dev
+          readOnly: true
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: etc
+          mountPath: /host/etc
+          readOnly: true
+        - name: usr-lib
+          mountPath: /host/usr/lib
+          readOnly: true
       volumes:
         - name: libs-repo
           hostPath:
@@ -60,3 +75,15 @@ spec:
         - name: dev
           hostPath:
             path: /dev
+        - name: proc
+          hostPath:
+            path: /proc
+        - name: sys
+          hostPath:
+            path: /sys
+        - name: etc
+          hostPath:
+            path: /etc
+        - name: usr-lib
+          hostPath:
+            path: /usr/lib
