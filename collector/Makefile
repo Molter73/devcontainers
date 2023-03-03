@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	docker pull quay.io/stackrox-io/collector-builder:cache
+	docker build --tag collector-devcontainer:latest $(CURDIR)
 
 .PHONY: deploy
 deploy: build

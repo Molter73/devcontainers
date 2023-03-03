@@ -17,12 +17,14 @@ spec:
     spec:
       containers:
       - name: collector-builder
-        image: quay.io/stackrox-io/collector-builder:cache
+        image: collector-devcontainer:latest
         imagePullPolicy: Never
         workingDir: ${HOME}/go/src/github.com/stackrox/collector
         env:
         - name: CMAKE_EXPORT_COMPILE_COMMANDS
           value: "ON"
+        - name: DISABLE_PROFILING
+          value: "true"
         command:
         - /bin/bash
         stdin: true
