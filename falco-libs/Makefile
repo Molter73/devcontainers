@@ -1,13 +1,15 @@
+FALCO_BUILDER_FLAVOR ?= fedora
+
 .PHONY: build
 build:
-	docker build --tag falco-fedora:latest \
-		-f $(CURDIR)/fedora.Dockerfile \
+	docker build --tag falco-builder:$(FALCO_BUILDER_FLAVOR) \
+		-f $(CURDIR)/$(FALCO_BUILDER_FLAVOR).Dockerfile \
 		$(CURDIR)
 
 .PHONY: deploy
 deploy: build
-	envsubst < $(CURDIR)/falco.yml | kubectl apply -f -
+	$(CURDIR)/format-spec.sh | kubectl apply -f -
 
 .PHONY: teardown
 teardown:
-	envsubst < $(CURDIR)/falco.yml | kubectl delete -f -
+	$(CURDIR)/format-spec.sh | kubectl delete -f -
