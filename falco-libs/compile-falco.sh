@@ -14,13 +14,16 @@ function clean () {
 }
 
 function configure () {
+    sanitizers="-fsanitize=address -fsanitize=undefined"
     mkdir -p "${FALCO_DIR}/build"
     cmake \
         -DBUILD_BPF=ON \
         -DUSE_BUNDLED_DEPS=OFF \
         -DUSE_BUNDLED_VALIJSON=ON \
         -DCMAKE_BUILD_TYPE=Debug \
-        -DBUILD_LIBSCAP_MODERN_BPF=OFF \
+        -DBUILD_LIBSCAP_MODERN_BPF=ON \
+        -DCMAKE_C_FLAGS="${sanitizers}" \
+        -DCMAKE_CXX_FLAGS="${sanitizers}" \
         -DUSE_BUNDLED_LIBBPF=OFF \
         -DUSE_BUNDLED_ZLIB=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -31,12 +34,12 @@ function configure () {
 function build () {
     local target
 
-    if [[ ! -d "${FALCO_DIR}/build" ]] || find "${FALCO_DIR}/build" -type d -empty | read ; then
+    if [[ ! -d "${FALCO_DIR}/build" ]] || find "${FALCO_DIR}/build" -type d -empty | read -r ; then
         configure
     fi
 
     target="$1"
-    make -j`nproc` -C "${FALCO_DIR}/build" "$target"
+    make -j"$(nproc)" -C "${FALCO_DIR}/build" "$target"
 }
 
 [[ -z "${FALCO_DIR}" ]] && FALCO_DIR="$(pwd)"

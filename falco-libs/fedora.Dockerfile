@@ -4,6 +4,9 @@ RUN dnf install -y \
     gcc \
     gcc-c++ \
     libasan \
+    libubsan \
+    bpftool \
+    libbpf-devel \
     dnf-plugins-core \
     git \
     make \
@@ -25,6 +28,7 @@ RUN dnf install -y \
 # Debugging packages
     gdb \
     clang-analyzer \
+    clang-tools-extra \
 # Dependencies needed to build falcosecurity/libs.
     libb64-devel \
     c-ares-devel \
