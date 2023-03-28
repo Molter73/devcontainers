@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bpfd-builder
+  labels:
+    app: bpfd-builder
+spec:
+  selector:
+    matchLabels:
+      app: bpfd-builder
+  replicas: 1
+  template:
+    metadata:
+      name: bpfd-builder
+      labels:
+        app: bpfd-builder
+    spec:
+      containers:
+      - name: bpfd-builder
+        image: bpfd-devcontainer:latest
+        imagePullPolicy: Never
+        workingDir: ${HOME}/go/src/github.com/redhat-et/bpfd
+        securityContext:
+          privileged: true
+        env:
+        - name: CMAKE_EXPORT_COMPILE_COMMANDS
+          value: "ON"
+        command:
+        - /bin/bash
+        stdin: true
+        ports:
+        - containerPort: 50051
+        volumeMounts:
+        - name: bpfd-repo
+          mountPath: ${HOME}/go/src/github.com/redhat-et/bpfd
+        - name: libbpf-repo
+          mountPath: ${HOME}/go/src/github.com/libbpf/libbpf
+      volumes:
+        - name: bpfd-repo
+          hostPath:
+            path: ${HOME}/go/src/github.com/redhat-et/bpfd
+        - name: libbpf-repo
+          hostPath:
+            path: ${HOME}/go/src/github.com/libbpf/libbpf
