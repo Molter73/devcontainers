@@ -20,10 +20,8 @@ function configure () {
         -DBUILD_BPF=ON \
         -DUSE_BUNDLED_DEPS=OFF \
         -DUSE_BUNDLED_VALIJSON=ON \
-        -DCMAKE_BUILD_TYPE=Debug \
+        -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_LIBSCAP_MODERN_BPF=ON \
-        -DCMAKE_C_FLAGS="${sanitizers}" \
-        -DCMAKE_CXX_FLAGS="${sanitizers}" \
         -DUSE_BUNDLED_LIBBPF=OFF \
         -DUSE_BUNDLED_ZLIB=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \

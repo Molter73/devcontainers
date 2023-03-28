@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM ubuntu:jammy
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -30,18 +30,20 @@ RUN apt-get update && \
         libgtest-dev \
         libprotobuf-dev \
         liblua5.1-dev \
-        libre2-5 \
         libre2-dev \
-        linux-headers-amd64 \
+        linux-headers-"$(uname -r)" \
+        linux-tools-"$(uname -r)" \
+        libbpf-dev \
+        libcap-dev \
         python3-pip && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg && \
     echo \
-        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
-        $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+      "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+      $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
     apt-get update && \
     apt-get install -y --no-install-recommends docker-ce-cli && \
     apt-get clean && \
