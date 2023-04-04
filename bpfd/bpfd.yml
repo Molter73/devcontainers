@@ -35,6 +35,10 @@ spec:
           mountPath: ${HOME}/go/src/github.com/redhat-et/bpfd
         - name: libbpf-repo
           mountPath: ${HOME}/go/src/github.com/libbpf/libbpf
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+        - name: sys
+          mountPath: /sys
       volumes:
         - name: bpfd-repo
           hostPath:
@@ -42,3 +46,9 @@ spec:
         - name: libbpf-repo
           hostPath:
             path: ${HOME}/go/src/github.com/libbpf/libbpf
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+        - name: sys
+          hostPath:
+            path: /sys
