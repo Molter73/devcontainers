@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: collector-builder
-        image: collector-devcontainer:latest
+        image: quay.io/mmoltras/devcontainers:collector
         imagePullPolicy: Never
         workingDir: ${HOME}/go/src/github.com/stackrox/collector
         securityContext:

@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: bpfd-builder
-        image: bpfd-devcontainer:latest
+        image: quay.io/mmoltras/devcontainers:bpfd
         imagePullPolicy: Never
         workingDir: ${HOME}/go/src/github.com/redhat-et/bpfd
         securityContext:
