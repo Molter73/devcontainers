@@ -8,6 +8,10 @@ build:
 		-f $(CURDIR)/$(FALCO_BUILDER_FLAVOR).Dockerfile \
 		$(CURDIR)
 
+.PHONY: push
+push: build
+	docker push quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
+
 .PHONY: deploy
 deploy: build
 	$(CURDIR)/format-spec.sh | kubectl apply -f -
