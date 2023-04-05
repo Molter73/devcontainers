@@ -1,6 +1,7 @@
 .PHONY: build
 build:
-	docker build --tag bpfd-devcontainer:latest $(CURDIR)
+	docker pull quay.io/mmoltras/devcontainers:bpfd || true
+	docker build --tag quay.io/mmoltras/devcontainers:bpfd $(CURDIR)
 
 .PHONY: deploy
 deploy: build

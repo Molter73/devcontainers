@@ -1,0 +1,34 @@
+name: Build and push devcontainer images
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+        - collector
+        - falco-libs
+        - bpfd
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build the image
+      run: |
+        make -C ${{ matrix.image }} build
+
+    - name: Login to Quay.io
+      uses: docker/login-action@v2
+      with:
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_TOKEN }}
+
+    - name: Push the image
+      run: |
+        docker push quay.io/mmoltras/devcontainers:${{ matrix.image }}
+

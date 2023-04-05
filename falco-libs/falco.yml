@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: libs-builder
-        image: falco-builder:${FALCO_BUILDER_FLAVOR}
+        image: quay.io/mmoltras/devcontainers:falco-libs-${FALCO_BUILDER_FLAVOR}
         imagePullPolicy: Never
         workingDir: ${HOME}/go/src/github.com/falcosecurity/libs
         securityContext:
