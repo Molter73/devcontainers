@@ -1,3 +1,60 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: cargo-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /mnt/bpfd/cargo
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: target-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 3Gi
+  accessModes:
+  - ReadWriteOnce
+  hostPath:
+    path: /mnt/bpfd/target
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cargo-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage:
+        2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: target-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage:
+        3Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,8 +80,8 @@ spec:
         securityContext:
           privileged: true
         env:
-        - name: CMAKE_EXPORT_COMPILE_COMMANDS
-          value: "ON"
+        - name: CARGO_TARGET_DIR
+          value: /root/target
         command:
         - /bin/bash
         stdin: true
@@ -39,6 +96,10 @@ spec:
           mountPath: /var/run/docker.sock
         - name: sys
           mountPath: /sys
+        - name: cargo-pv-storage
+          mountPath: /usr/local/cargo/registry
+        - name: target-pv-storage
+          mountPath: /root/target
       volumes:
         - name: bpfd-repo
           hostPath:
@@ -52,3 +113,9 @@ spec:
         - name: sys
           hostPath:
             path: /sys
+        - name: cargo-pv-storage
+          persistentVolumeClaim:
+            claimName: cargo-pv-claim
+        - name: target-pv-storage
+          persistentVolumeClaim:
+            claimName: target-pv-claim
