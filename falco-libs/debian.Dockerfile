@@ -50,6 +50,3 @@ RUN mkdir -p /etc/apt/keyrings && \
     rm -rf /var/lib/apt/lists/*
 
 COPY compile-falco.sh /usr/bin/
-
-ARG FALCO_DIR
-ENV FALCO_DIR=$FALCO_DIR

@@ -55,6 +55,3 @@ RUN dnf config-manager --add-repo \
     dnf clean all
 
 COPY compile-falco.sh /usr/bin/
-
-ARG FALCO_DIR
-ENV FALCO_DIR=$FALCO_DIR
