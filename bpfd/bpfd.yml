@@ -23,7 +23,7 @@ metadata:
 spec:
   storageClassName: manual
   capacity:
-    storage: 3Gi
+    storage: 7Gi
   accessModes:
   - ReadWriteOnce
   hostPath:
@@ -53,7 +53,7 @@ spec:
   resources:
     requests:
       storage:
-        3Gi
+        7Gi
 ---
 apiVersion: apps/v1
 kind: Deployment

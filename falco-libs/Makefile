@@ -23,6 +23,10 @@ teardown:
 teardown:
 	docker rm -f libs-builder
 
+.PHONY: docker-teardown
+docker-teardown:
+	docker rm -f libs-builder
+
 .PHONY: docker-deploy
 docker-deploy: build docker-teardown
 	docker run -id --privileged --name libs-builder \
