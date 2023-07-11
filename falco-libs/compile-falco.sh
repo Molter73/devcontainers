@@ -25,6 +25,7 @@ function configure () {
         -DUSE_BUNDLED_LIBBPF=OFF \
         -DUSE_BUNDLED_ZLIB=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DCREATE_TEST_TARGETS=ON \
         -S "${FALCO_DIR}" \
         -B "${FALCO_DIR}/build"
 }

@@ -19,10 +19,6 @@ deploy: build
 teardown:
 	$(CURDIR)/format-spec.sh | kubectl delete -f -
 
-.PHONY: teardown
-teardown:
-	docker rm -f libs-builder
-
 .PHONY: docker-teardown
 docker-teardown:
 	docker rm -f libs-builder
@@ -43,4 +39,5 @@ docker-deploy: build docker-teardown
 		-v /sys:/host/sys \
 		-v /etc:/host/etc \
 		-v /usr/lib:/host/usr/lib \
+		-v /var/run/docker.sock:/var/run/docker.sock \
 		quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
