@@ -29,6 +29,7 @@ docker-deploy: build docker-teardown
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \
 		-e HOST_ROOT="/host" \
 		-e FALCO_DIR="${HOME}/go/src/github.com/falcosecurity/libs" \
+		-e FALCO_BUILDER_FLAVOR="${FALCO_BUILDER_FLAVOR}" \
 		-w ${HOME}/go/src/github.com/falcosecurity/libs \
 		-v ${HOME}/go/src/github.com/falcosecurity/libs:${HOME}/go/src/github.com/falcosecurity/libs \
 		-v /usr/src:/usr/src \

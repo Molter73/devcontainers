@@ -35,6 +35,7 @@ RUN apt-get update && \
         linux-tools-"$(uname -r)" \
         libbpf-dev \
         libcap-dev \
+        vim \
         python3-pip && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/*

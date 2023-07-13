@@ -28,7 +28,7 @@ RUN dnf config-manager --add-repo \
 
 RUN go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28 && \
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2 && \
-	go install github.com/cilium/ebpf/cmd/bpf2go@master
+	go install github.com/cilium/ebpf/cmd/bpf2go@main
 
 RUN curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | \
 	sh -s -- -y --no-modify-path && \

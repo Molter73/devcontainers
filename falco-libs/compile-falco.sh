@@ -14,7 +14,14 @@ function clean () {
 }
 
 function configure () {
-    sanitizers="-fsanitize=address -fsanitize=undefined"
+    # sanitizers="-fsanitize=address -fsanitize=undefined"
+    use_bundled_libbpf="OFF"
+
+    if [[ "${FALCO_BUILDER_FLAVOR:-fedora}" != "fedora" ]] ; then
+        # Platform dependent adjustments
+        use_bundled_libbpf="ON"
+    fi
+
     mkdir -p "${FALCO_DIR}/build"
     cmake \
         -DBUILD_BPF=ON \
@@ -22,7 +29,7 @@ function configure () {
         -DUSE_BUNDLED_VALIJSON=ON \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_LIBSCAP_MODERN_BPF=ON \
-        -DUSE_BUNDLED_LIBBPF=OFF \
+        -DUSE_BUNDLED_LIBBPF="${use_bundled_libbpf}" \
         -DUSE_BUNDLED_ZLIB=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DCREATE_TEST_TARGETS=ON \
