@@ -13,6 +13,7 @@ RUN dnf -y update && \
 		libbpf-devel \
 		iproute \
 		iproute-tc \
+		iputils \
 		elfutils-libelf-devel \
 		golang \
 		protobuf-compiler \
