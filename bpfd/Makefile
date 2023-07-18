@@ -25,11 +25,11 @@ docker-teardown:
 docker-deploy: build docker-teardown
 	docker run -id --privileged --name bpfd-builder \
 		-e CARGO_TARGET_DIR=/root/target \
-		-v ${HOME}/go/src/github.com/redhat-et/bpfd:${HOME}/go/src/github.com/redhat-et/bpfd \
+		-v ${HOME}/go/src/github.com/bpfd-dev/bpfd:${HOME}/go/src/github.com/bpfd-dev/bpfd \
 		-v ${HOME}/go/src/github.com/libbpf/libbpf:${HOME}/go/src/github.com/libbpf/libbpf \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v /sys:/sys \
 		-v /mnt/podman/cargo-cache:/usr/local/cargo/registry \
 		-v /mnt/podman/bpfd-cache:/root/target \
-		-w ${HOME}/go/src/github.com/redhat-et/bpfd \
+		-w ${HOME}/go/src/github.com/bpfd-dev/bpfd \
 		$(BUILDER_IMAGE)
