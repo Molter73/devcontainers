@@ -34,11 +34,11 @@ docker-deploy: build docker-teardown
 		-v ${HOME}/go/src/github.com/falcosecurity/libs:${HOME}/go/src/github.com/falcosecurity/libs \
 		-v /usr/src:/usr/src \
 		-v /lib/modules:/lib/modules \
-		-v /usr/include/bpf:/usr/include/bpf \
 		-v /dev:/host/dev \
 		-v /proc:/host/proc \
 		-v /sys:/host/sys \
 		-v /etc:/host/etc \
 		-v /usr/lib:/host/usr/lib \
 		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v /run/podman/podman.sock:/run/podman/podman.sock \
 		quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)

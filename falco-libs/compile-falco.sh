@@ -16,10 +16,13 @@ function clean () {
 function configure () {
     # sanitizers="-fsanitize=address -fsanitize=undefined"
     use_bundled_libbpf="OFF"
+    build_shared_libs="OFF"
 
     if [[ "${FALCO_BUILDER_FLAVOR:-fedora}" != "fedora" ]] ; then
         # Platform dependent adjustments
         use_bundled_libbpf="ON"
+    else
+        build_shared_libs="ON"
     fi
 
     mkdir -p "${FALCO_DIR}/build"
@@ -33,6 +36,7 @@ function configure () {
         -DUSE_BUNDLED_ZLIB=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DCREATE_TEST_TARGETS=ON \
+        -DBUILD_SHARED_LIBS="${build_shared_libs}" \
         -S "${FALCO_DIR}" \
         -B "${FALCO_DIR}/build"
 }

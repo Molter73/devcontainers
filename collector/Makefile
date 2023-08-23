@@ -23,7 +23,7 @@ docker-teardown:
 
 .PHONY: docker-deploy
 docker-deploy: build docker-teardown
-	docker run -id --privileged --name collector-builder \
+	docker run -idP --privileged --name collector-builder \
 		--entrypoint /bin/bash \
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \
 		-e DISABLE_PROFILING="true" \
@@ -34,5 +34,6 @@ docker-deploy: build docker-teardown
 		-v /sys:/host/sys \
 		-v /etc:/host/etc \
 		-v /usr/lib:/host/usr/lib \
+		-v /var/run/docker.sock:/var/run/docker.sock \
 		-w ${HOME}/go/src/github.com/stackrox/collector \
 		$(BUILDER_IMAGE)
