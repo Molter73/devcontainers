@@ -6,5 +6,7 @@ RUN dnf install -y \
         podman-docker && \
     dnf clean all
 
+COPY clangd.yaml /root/.config/clangd/config.yaml
+
 # scan-view default port
 EXPOSE 8181
