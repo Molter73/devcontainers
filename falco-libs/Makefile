@@ -1,7 +1,15 @@
 FALCO_BUILDER_FLAVOR ?= fedora
 
+.PHONY: clang-config
+clang-config:
+	envsubst < $(CURDIR)/clangd.tpl.yaml > $(CURDIR)/clangd.yaml
+
+.PHONY: clean
+clean:
+	rm -f $(CURDIR)/clangd.yaml
+
 .PHONY: build
-build:
+build: clang-config
 	docker build \
 		--tag quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR) \
 		-f $(CURDIR)/$(FALCO_BUILDER_FLAVOR).Dockerfile \
@@ -16,11 +24,11 @@ deploy: build
 	$(CURDIR)/format-spec.sh | kubectl apply -f -
 
 .PHONY: teardown
-teardown:
+teardown: clean
 	$(CURDIR)/format-spec.sh | kubectl delete -f -
 
 .PHONY: docker-teardown
-docker-teardown:
+docker-teardown: clean
 	docker rm -f libs-builder
 
 .PHONY: docker-deploy

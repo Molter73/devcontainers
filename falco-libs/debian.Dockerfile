@@ -50,4 +50,5 @@ RUN mkdir -p /etc/apt/keyrings && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY clangd.yaml /root/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/bin/

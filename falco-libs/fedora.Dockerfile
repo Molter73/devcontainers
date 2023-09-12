@@ -54,4 +54,5 @@ RUN dnf config-manager --add-repo \
     dnf install -y docker-ce-cli && \
     dnf clean all
 
+COPY clangd.yaml /root/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/bin/
