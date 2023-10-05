@@ -9,20 +9,12 @@ build:
 push: build
 	docker push $(BUILDER_IMAGE)
 
-.PHONY: deploy
-deploy: build
-	envsubst < $(CURDIR)/collector.yml | kubectl apply -f -
-
-.PHONY: teardown
+.PHONY:teardown
 teardown:
-	envsubst < $(CURDIR)/collector.yml | kubectl delete -f -
-
-.PHONY: docker-teardown
-docker-teardown:
 	docker rm -f collector-builder
 
-.PHONY: docker-deploy
-docker-deploy: build docker-teardown
+.PHONY: deploy
+deploy: build teardown
 	docker run -idP --privileged --name collector-builder \
 		--entrypoint /bin/bash \
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \

@@ -8,6 +8,7 @@ Diagnostics:
     - readability*
     Remove:
     - readability-identifier-length
+    - modernize-use-nodiscard
     - modernize-use-trailing-return-type
 ---
 If:

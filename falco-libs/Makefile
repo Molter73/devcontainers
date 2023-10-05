@@ -19,20 +19,12 @@ build: clang-config
 push: build
 	docker push quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
 
-.PHONY: deploy
-deploy: build
-	$(CURDIR)/format-spec.sh | kubectl apply -f -
-
 .PHONY: teardown
 teardown: clean
-	$(CURDIR)/format-spec.sh | kubectl delete -f -
-
-.PHONY: docker-teardown
-docker-teardown: clean
 	docker rm -f libs-builder
 
-.PHONY: docker-deploy
-docker-deploy: build docker-teardown
+.PHONY: deploy
+deploy: build teardown
 	docker run -id --privileged --name libs-builder \
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \
 		-e HOST_ROOT="/host" \
@@ -49,4 +41,5 @@ docker-deploy: build docker-teardown
 		-v /usr/lib:/host/usr/lib \
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v /run/podman/podman.sock:/run/podman/podman.sock \
+		-v /run/podman/podman.sock:/host/run/podman/podman.sock \
 		quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
