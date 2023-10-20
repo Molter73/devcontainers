@@ -23,4 +23,16 @@ M.setup = function(opts)
     }
 end
 
+M.volume_claim = function()
+    return {
+        apiVersion = 'v1',
+        kind = 'PersistentVolumeClaim',
+        metadata = { name = 'collector-ccache', },
+        spec = {
+            accessModes = { 'ReadWriteOnce' },
+            resources = { requests = { storage = '5Gi' } },
+        },
+    }
+end
+
 return M

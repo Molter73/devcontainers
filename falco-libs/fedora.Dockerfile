@@ -3,6 +3,7 @@ FROM fedora:38
 RUN dnf install -y \
     gcc \
     gcc-c++ \
+    ccache \
     libasan \
     libubsan \
     bpftool \
@@ -46,13 +47,19 @@ RUN dnf install -y \
 # Set some symlinks to allow building of drivers.
     kernel_version=$(uname -r) && \
     ln -s "/host/lib/modules/$kernel_version" "/lib/modules/$kernel_version" && \
-    ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version"
+    ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version" && \
+    ln -s $(which ccache) /usr/local/bin/gcc && \
+    ln -s $(which ccache) /usr/local/bin/g++ && \
+    echo "" > /etc/profile.d/ccache.sh
 
 # Install docker CLI
 RUN dnf config-manager --add-repo \
     https://download.docker.com/linux/fedora/docker-ce.repo && \
     dnf install -y docker-ce-cli && \
     dnf clean all
+
+ENV CC=/usr/local/bin/gcc
+ENV CXX=/usr/local/bin/g++
 
 COPY clangd.yaml /root/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/bin/

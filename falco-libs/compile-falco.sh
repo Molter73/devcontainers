@@ -34,6 +34,8 @@ function configure () {
         -DBUILD_LIBSCAP_MODERN_BPF=ON \
         -DUSE_BUNDLED_LIBBPF="${use_bundled_libbpf}" \
         -DUSE_BUNDLED_ZLIB=ON \
+        -DUSE_BUNDLED_UTHASH=ON \
+        -DUSE_BUNDLED_TINYDIR=ON \
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
         -DCREATE_TEST_TARGETS=ON \
         -DBUILD_SHARED_LIBS="${build_shared_libs}" \
