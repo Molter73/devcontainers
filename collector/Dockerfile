@@ -1,4 +1,4 @@
-FROM quay.io/stackrox-io/collector-builder:cache
+FROM quay.io/stackrox-io/collector-builder:master
 
 RUN dnf install -y epel-release && \
     dnf install -y \

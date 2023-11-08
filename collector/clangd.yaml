@@ -10,6 +10,16 @@ Diagnostics:
     - readability-identifier-length
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
+    CheckOptions:
+      readability-identifier-naming.NamespaceCase: lower_case
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.MethodCase: CamelCase
+      readability-identifier-naming.MemberCase: lower_case
+      readability-identifier-naming.PrivateMemberSuffix: _
+      readability-identifier-naming.StructCase: CamelCase
+      readability-identifier-naming.FunctionCase: CamelCase
+      readability-identifier-naming.VariableCase: lower_case
+      readability-identifier-naming.GlobalConstantCase: UPPER_CASE
 ---
 If:
   PathMatch: .*Test\.cpp

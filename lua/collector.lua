@@ -18,6 +18,9 @@ M.setup = function(opts)
         securityContext = {
             privileged = true,
         },
+        ports = {
+            { containerPort = 8181, hostIP = '0.0.0.0', hostPort = 8181 },
+        },
         stdin = true,
         tty = true,
     }
