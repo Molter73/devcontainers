@@ -1,0 +1,23 @@
+name: Build devcontainer images
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+        - collector
+        - falco-libs
+        - bpfd
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Build
+      run: |
+        make -C ${{ matrix.image }} build
+
