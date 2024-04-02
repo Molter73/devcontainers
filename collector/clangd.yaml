@@ -10,6 +10,7 @@ Diagnostics:
     - readability-identifier-length
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
+    - cppcoreguidelines-avoid-magic-numbers
     CheckOptions:
       readability-identifier-naming.NamespaceCase: lower_case
       readability-identifier-naming.ClassCase: CamelCase

@@ -1,5 +1,5 @@
 .PHONY: all
-all: collector falco clean
+all: collector falco os-uni clean
 	kluars xlate $(CURDIR)/lua | podman play kube -
 
 .PHONY: clean
@@ -13,3 +13,7 @@ collector:
 .PHONY: falco
 falco:
 	make -C falco-libs build
+
+.PHONY: os-uni
+os-uni:
+	make -C os-uni build

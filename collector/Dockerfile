@@ -9,7 +9,8 @@ RUN dnf install -y epel-release && \
     dnf clean all && \
     ln -s $(which ccache) /usr/local/bin/gcc && \
     ln -s $(which ccache) /usr/local/bin/g++ && \
-    echo "" > /etc/profile.d/ccache.sh
+    echo "" > /etc/profile.d/ccache.sh && \
+    echo 'export MAKEFLAGS="-j$(nproc)"' >> /root/.bashrc
 
 ENV CC=/usr/local/bin/gcc
 ENV CXX=/usr/local/bin/g++

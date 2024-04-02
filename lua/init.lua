@@ -1,8 +1,12 @@
 local collector_repo = os.getenv('GOPATH') .. '/src/github.com/stackrox/collector'
 local falco_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/libs'
+local os_uni_repo = os.getenv('GOPATH') .. '/src/github.com/molter73/os-uni'
+local user_name = os.getenv("USER")
+local collector_home_mountpath = '/home/' .. user_name .. '/go/src/github.com/stackrox/collector'
 
 local collector = require('collector')
 local falco = require('falco')
+local os_uni = require('os-uni')
 
 local collector_claim = collector.volume_claim()
 local falco_claim = falco.volume_claim()
@@ -17,6 +21,7 @@ local volumes = {
     { name = 'docker-sock',      hostPath = { path = '/var/run/docker.sock', } },
     { name = 'collector-repo',   hostPath = { path = collector_repo, } },
     { name = 'falco-repo',       hostPath = { path = falco_repo, } },
+    { name = 'os-uni-repo',      hostPath = { path = os_uni_repo, } },
     { name = 'collector-ccache', persistentVolumeClaim = { claimName = collector_claim.metadata.name } },
     { name = 'falco-ccache',     persistentVolumeClaim = { claimName = falco_claim.metadata.name, } },
 }
@@ -24,12 +29,13 @@ local volumes = {
 local collector_opts = {
     repo_path = collector_repo,
     volumes = {
-        { mountPath = '/host/proc',          name = 'proc-fs',          readOnly = true, },
-        { mountPath = '/host/sys',           name = 'sys-fs',           readOnly = true, },
-        { mountPath = '/host/etc',           name = 'etc-fs',           readOnly = true, },
-        { mountPath = '/host/usr/lib',       name = 'usr-lib-fs',       readOnly = true, },
-        { mountPath = '/root/.cache/ccache', name = 'collector-ccache', },
-        { mountPath = collector_repo,        name = 'collector-repo', },
+        { mountPath = '/host/proc',             name = 'proc-fs',          readOnly = true, },
+        { mountPath = '/host/sys',              name = 'sys-fs',           readOnly = true, },
+        { mountPath = '/host/etc',              name = 'etc-fs',           readOnly = true, },
+        { mountPath = '/host/usr/lib',          name = 'usr-lib-fs',       readOnly = true, },
+        { mountPath = '/root/.cache/ccache',    name = 'collector-ccache', },
+        { mountPath = collector_repo,           name = 'collector-repo', },
+        { mountPath = collector_home_mountpath, name = 'collector-repo', },
     },
 }
 
@@ -49,6 +55,12 @@ local falco_opts = {
     }
 }
 
+local os_uni_opts = {
+    repo_path = os_uni_repo,
+    volumes = {
+        { mountPath = os_uni_repo, name = 'os-uni-repo', },
+    },
+}
 
 local metadata = {
     name = 'devcontainers',
@@ -62,6 +74,7 @@ local spec = {
     containers = {
         collector.setup(collector_opts),
         falco.setup(falco_opts),
+        os_uni.setup(os_uni_opts),
     },
     volumes = volumes,
 }

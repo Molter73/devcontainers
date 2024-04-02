@@ -1,0 +1,18 @@
+FROM fedora:39
+
+# hadolint ignore=DL3041
+RUN dnf install -y \
+    gcc \
+    gdb \
+    procps \
+    make \
+    ncurses \
+    python3-pip \
+    # vvv clangd vvv
+    clang-tools-extra \
+    bear && \
+    dnf clean all
+
+COPY clangd.yaml /root/.config/clangd/config.yaml
+
+WORKDIR /workdir

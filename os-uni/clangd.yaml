@@ -1,0 +1,13 @@
+Diagnostics:
+  ClangTidy:
+    Add:
+    - bugprone*
+    - cppcoreguidelines*
+    - modernize*
+    - performance*
+    - readability*
+    Remove:
+    - readability-identifier-length
+    - modernize-use-nodiscard
+    - modernize-use-trailing-return-type
+    - cppcoreguidelines-avoid-magic-numbers
