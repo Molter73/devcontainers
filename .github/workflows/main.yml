@@ -13,7 +13,7 @@ jobs:
         image:
         - collector
         - falco-libs
-        - bpfd
+        - os-uni
     steps:
     - uses: actions/checkout@v3
 
