@@ -15,10 +15,9 @@ teardown:
 
 .PHONY: deploy
 deploy: build teardown
-	docker run -idP --privileged --name collector-builder \
+	docker run -idP --privileged --name devcontainers-collector-builder \
 		--entrypoint /bin/bash \
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \
-		-e DISABLE_PROFILING="true" \
 		-e COLLECTOR_HOST_ROOT="/host" \
 		-v ${HOME}/go/src/github.com/stackrox/collector:${HOME}/go/src/github.com/stackrox/collector \
 		-v /dev:/host/dev \
@@ -27,5 +26,6 @@ deploy: build teardown
 		-v /etc:/host/etc \
 		-v /usr/lib:/host/usr/lib \
 		-v /var/run/docker.sock:/var/run/docker.sock \
+		-v collector-ccache:/root/.cache/ccache \
 		-w ${HOME}/go/src/github.com/stackrox/collector \
 		$(BUILDER_IMAGE)

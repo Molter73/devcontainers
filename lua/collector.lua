@@ -11,7 +11,6 @@ M.setup = function(opts)
         command = { '/bin/bash' },
         env = {
             { name = 'CMAKE_EXPORT_COMPILE_COMMANDS', value = 'ON' },
-            { name = 'DISABLE_PROFILING',             value = 'true' },
             { name = 'COLLECTOR_HOST_ROOT',           value = '/host' },
         },
         volumeMounts = opts.volumes or {},
