@@ -10,6 +10,9 @@ RUN dnf install -y \
     python3-pip \
     # vvv clangd vvv
     clang-tools-extra \
+    libasan \
+    libubsan \
+    libtsan \
     bear && \
     dnf clean all
 

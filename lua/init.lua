@@ -1,7 +1,7 @@
 local collector_repo = os.getenv('GOPATH') .. '/src/github.com/stackrox/collector'
 local falco_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/libs'
 local os_uni_repo = os.getenv('GOPATH') .. '/src/github.com/molter73/os-uni'
-local user_name = os.getenv("USER")
+local movies_repo = os.getenv('GOPATH') .. '/src/github.com/molter73/movies'
 
 local collector = require('collector')
 local falco = require('falco')
@@ -21,6 +21,7 @@ local volumes = {
     { name = 'collector-repo',   hostPath = { path = collector_repo, } },
     { name = 'falco-repo',       hostPath = { path = falco_repo, } },
     { name = 'os-uni-repo',      hostPath = { path = os_uni_repo, } },
+    { name = 'movies-repo',      hostPath = { path = movies_repo, } },
     { name = 'collector-ccache', persistentVolumeClaim = { claimName = collector_claim.metadata.name } },
     { name = 'falco-ccache',     persistentVolumeClaim = { claimName = falco_claim.metadata.name, } },
 }
@@ -57,6 +58,7 @@ local os_uni_opts = {
     repo_path = os_uni_repo,
     volumes = {
         { mountPath = os_uni_repo, name = 'os-uni-repo', },
+        { mountPath = movies_repo, name = 'movies-repo', },
     },
 }
 

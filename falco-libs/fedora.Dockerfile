@@ -42,6 +42,7 @@ RUN dnf install -y \
     jsoncpp-devel \
     openssl-devel \
     tbb-devel \
+    xz \
     zlib-devel && \
     dnf clean all && \
 # Set some symlinks to allow building of drivers.
@@ -57,6 +58,13 @@ RUN dnf config-manager --add-repo \
     https://download.docker.com/linux/fedora/docker-ce.repo && \
     dnf install -y docker-ce-cli && \
     dnf clean all
+
+# Install emscripten
+RUN git clone https://github.com/emscripten-core/emsdk.git && \
+    cd emsdk && ./emsdk install latest && \
+    ./emsdk activate latest && \
+    echo 'export EMSDK_QUIET=1' >> /root/.bashrc && \
+    echo 'source /emsdk/emsdk_env.sh' >> /root/.bashrc
 
 ENV CC=/usr/local/bin/gcc
 ENV CXX=/usr/local/bin/g++
