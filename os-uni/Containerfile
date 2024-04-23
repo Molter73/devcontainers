@@ -1,4 +1,4 @@
-FROM fedora:39
+FROM fedora:40
 
 # hadolint ignore=DL3041
 RUN dnf install -y \
