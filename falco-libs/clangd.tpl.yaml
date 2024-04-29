@@ -1,5 +1,5 @@
 CompileFlags:
-  CompilationDatabase: $GOPATH/github.com/falcosecurity/libs/build/
+  CompilationDatabase: $GOPATH/src/github.com/falcosecurity/libs/build/
 Diagnostics:
   ClangTidy:
     Add:
