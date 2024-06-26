@@ -21,6 +21,8 @@ Diagnostics:
       readability-identifier-naming.FunctionCase: CamelCase
       readability-identifier-naming.VariableCase: lower_case
       readability-identifier-naming.GlobalConstantCase: UPPER_CASE
+InlayHints:
+  Enabled: Yes
 ---
 If:
   PathMatch: .*Test\.cpp

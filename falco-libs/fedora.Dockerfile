@@ -70,4 +70,5 @@ ENV CC=/usr/local/bin/gcc
 ENV CXX=/usr/local/bin/g++
 
 COPY clangd.yaml /root/.config/clangd/config.yaml
-COPY compile-falco.sh /usr/bin/
+COPY compile-falco.sh /usr/local/bin/
+COPY compile-libs.sh /usr/local/bin/

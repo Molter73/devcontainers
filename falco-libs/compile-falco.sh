@@ -3,87 +3,46 @@
 set -euo pipefail
 
 function clean () {
-    rm -f "${FALCO_DIR}/driver/bpf/probe.{o,ll}"
     make -C "${FALCO_DIR}/build" clean || true
     rm -rf "${FALCO_DIR}/build"
 }
 
-function configure_host () {
+function configure() {
     # sanitizers="-fsanitize=address -fsanitize=undefined"
-    use_bundled_libbpf="OFF"
-    build_shared_libs="OFF"
-
-    if [[ "${FALCO_BUILDER_FLAVOR:-fedora}" != "fedora" ]] ; then
-        # Platform dependent adjustments
-        use_bundled_libbpf="ON"
-    else
-        build_shared_libs="ON"
-    fi
 
     mkdir -p "${FALCO_DIR}/build"
+cmake -DUSE_BUNDLED_DEPS=OFF
     cmake \
         -DBUILD_BPF=ON \
         -DUSE_BUNDLED_DEPS=OFF \
-        -DUSE_BUNDLED_VALIJSON=ON \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DBUILD_LIBSCAP_MODERN_BPF=ON \
-        -DUSE_BUNDLED_LIBBPF="${use_bundled_libbpf}" \
-        -DUSE_BUNDLED_ZLIB=ON \
-        -DUSE_BUNDLED_UTHASH=ON \
-        -DUSE_BUNDLED_TINYDIR=ON \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+        -DUSE_BUNDLED_NLOHMANN_JSON=ON \
+        -DUSE_BUNDLED_YAMLCPP=ON \
+        -DUSE_BUNDLED_CPPHTTPLIB=ON \
+        -DUSE_BUNDLED_CXXOPTS=ON \
+        -DFALCOSECURITY_LIBS_SOURCE_DIR="${LIBS_DIR}" \
+        -DDRIVER_SOURCE_DIR="${LIBS_DIR}" \
+        -DBUILD_DRIVER=ON \
+        -DBUILD_FALCO_MODERN_BPF=ON \
         -DCREATE_TEST_TARGETS=ON \
-        -DBUILD_SHARED_LIBS="${build_shared_libs}" \
+        -DBUILD_FALCO_UNIT_TESTS=ON \
         -S "${FALCO_DIR}" \
         -B "${FALCO_DIR}/build"
-}
-
-function configure_emscripten () {
-    emcmake cmake -DUSE_BUNDLED_DEPS=ON \
-        -S "${FALCO_DIR}" \
-        -B "${FALCO_DIR}/build"
-}
-
-function configure () {
-    emscripten="${1:-0}"
-    if ((emscripten)); then
-        configure_emscripten
-    else
-        configure_host
-    fi
 }
 
 function build () {
     local target
-    local emscripten="${2:-0}"
 
     if [[ ! -d "${FALCO_DIR}/build" ]] || find "${FALCO_DIR}/build" -type d -empty | read -r ; then
-        configure "$emscripten"
+        configure
     fi
 
     target="$1"
-    EMMAKE=""
-    if ((emscripten)); then
-        EMMAKE="emmake"
-    fi
-    "$EMMAKE" make -j"$(nproc)" -C "${FALCO_DIR}/build" "$target"
+    make -j"$(nproc)" -C "${FALCO_DIR}/build" "$target"
 }
 
 [[ -z "${FALCO_DIR}" ]] && FALCO_DIR="$(pwd)"
 # We will be removing some directories, so go somewhere stable
 cd "${FALCO_DIR}"
-
-EMSCRIPTEN=0
-
-while getopts "e" opt; do
-    case "${opt}" in
-        e)
-            EMSCRIPTEN=1
-            ;;
-        ??)
-            echo >&2 "Unknown option $OPTARG"
-    esac
-done
 
 shift $(($OPTIND - 1))
 
@@ -97,14 +56,14 @@ case "$ACTION" in
     clean
     ;;
 "configure")
-    configure "$EMSCRIPTEN"
+    configure
     ;;
 "build")
-    build "$TARGET" "$EMSCRIPTEN"
+    build "$TARGET"
     ;;
 "rebuild")
     clean
-    build "$TARGET" "$EMSCRIPTEN"
+    build "$TARGET"
     ;;
 *)
     echo >&2 "Unknown option '$ACTION'"

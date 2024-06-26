@@ -1,5 +1,6 @@
 local collector_repo = os.getenv('GOPATH') .. '/src/github.com/stackrox/collector'
-local falco_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/libs'
+local falco_libs_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/libs'
+local falco_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/falco'
 local movies_repo = os.getenv('GOPATH') .. '/src/github.com/molter73/movies'
 
 local collector = require('collector')
@@ -17,6 +18,7 @@ local volumes = {
     { name = 'modules-fs',       hostPath = { path = '/lib/modules', } },
     { name = 'docker-sock',      hostPath = { path = '/var/run/docker.sock', } },
     { name = 'collector-repo',   hostPath = { path = collector_repo, } },
+    { name = 'falco-libs-repo',  hostPath = { path = falco_libs_repo, } },
     { name = 'falco-repo',       hostPath = { path = falco_repo, } },
     { name = 'movies-repo',      hostPath = { path = movies_repo, } },
     { name = 'collector-ccache', persistentVolumeClaim = { claimName = collector_claim.metadata.name } },
@@ -38,15 +40,16 @@ local collector_opts = {
 local falco_opts = {
     repo_path = falco_repo,
     volumes = {
-        { mountPath = '/host/dev',            name = 'dev-fs',       readOnly = true, },
-        { mountPath = '/host/proc',           name = 'proc-fs',      readOnly = true, },
-        { mountPath = '/host/sys',            name = 'sys-fs',       readOnly = true, },
-        { mountPath = '/host/etc',            name = 'etc-fs',       readOnly = true, },
-        { mountPath = '/host/usr/lib',        name = 'usr-lib-fs',   readOnly = true, },
+        { mountPath = '/host/dev',            name = 'dev-fs',          readOnly = true, },
+        { mountPath = '/host/proc',           name = 'proc-fs',         readOnly = true, },
+        { mountPath = '/host/sys',            name = 'sys-fs',          readOnly = true, },
+        { mountPath = '/host/etc',            name = 'etc-fs',          readOnly = true, },
+        { mountPath = '/host/usr/lib',        name = 'usr-lib-fs',      readOnly = true, },
         { mountPath = '/usr/src',             name = 'usr-src-fs', },
         { mountPath = '/lib/modules',         name = 'modules-fs', },
         { mountPath = '/var/run/docker.sock', name = 'docker-sock', },
         { mountPath = '/root/.cache/ccache',  name = 'falco-ccache', },
+        { mountPath = falco_libs_repo,        name = 'falco-libs-repo', },
         { mountPath = falco_repo,             name = 'falco-repo', },
     }
 }

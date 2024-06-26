@@ -1,5 +1,24 @@
+If:
+  PathMatch: $GOPATH/src/github.com/falcosecurity/libs/.*
 CompileFlags:
   CompilationDatabase: $GOPATH/src/github.com/falcosecurity/libs/build/
+Diagnostics:
+  ClangTidy:
+    Add:
+    - bugprone*
+    - cppcoreguidelines*
+    - modernize*
+    - performance*
+    - readability*
+    Remove:
+    - readability-identifier-length
+    - modernize-use-nodiscard
+    - modernize-use-trailing-return-type
+---
+If:
+  PathMatch: $GOPATH/src/github.com/falcosecurity/falco/.*
+CompileFlags:
+  CompilationDatabase: $GOPATH/src/github.com/falcosecurity/falco/build/
 Diagnostics:
   ClangTidy:
     Add:
