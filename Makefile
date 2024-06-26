@@ -1,5 +1,5 @@
 .PHONY: all
-all: collector falco os-uni clean deploy
+all: collector falco clean deploy
 
 .PHONY: deploy
 deploy:
@@ -16,7 +16,3 @@ collector:
 .PHONY: falco
 falco:
 	make -C falco-libs build
-
-.PHONY: os-uni
-os-uni:
-	make -C os-uni build
