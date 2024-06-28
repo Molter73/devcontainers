@@ -11,7 +11,6 @@ function configure() {
     # sanitizers="-fsanitize=address -fsanitize=undefined"
 
     mkdir -p "${FALCO_DIR}/build"
-cmake -DUSE_BUNDLED_DEPS=OFF
     cmake \
         -DBUILD_BPF=ON \
         -DUSE_BUNDLED_DEPS=OFF \
@@ -20,7 +19,7 @@ cmake -DUSE_BUNDLED_DEPS=OFF
         -DUSE_BUNDLED_CPPHTTPLIB=ON \
         -DUSE_BUNDLED_CXXOPTS=ON \
         -DFALCOSECURITY_LIBS_SOURCE_DIR="${LIBS_DIR}" \
-        -DDRIVER_SOURCE_DIR="${LIBS_DIR}" \
+        -DDRIVER_SOURCE_DIR="${LIBS_DIR}/driver" \
         -DBUILD_DRIVER=ON \
         -DBUILD_FALCO_MODERN_BPF=ON \
         -DCREATE_TEST_TARGETS=ON \
