@@ -30,6 +30,8 @@ RUN dnf install -y \
     gdb \
     clang-analyzer \
     clang-tools-extra \
+# Dependencies for falcosecurity/testing
+    golang \
 # Dependencies needed to build falcosecurity/libs.
     libb64-devel \
     c-ares-devel \
