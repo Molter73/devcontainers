@@ -3,7 +3,9 @@ BUILDER_IMAGE=quay.io/mmoltras/devcontainers:collector
 .PHONY: build
 build:
 	docker build \
-		--tag $(BUILDER_IMAGE) $(CURDIR)
+		--tag $(BUILDER_IMAGE) \
+		-f Containerfile \
+		$(CURDIR)
 
 .PHONY: push
 push: build
