@@ -26,6 +26,7 @@ RUN dnf install -y \
     procps \
     python3-pip \
     kmod \
+    fzf \
     podman \
     podman-docker \
     zsh \
