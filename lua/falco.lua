@@ -6,7 +6,7 @@ M.setup = function(opts)
     local repo_path = opts.repo_path or os.exit(1)
     return {
         name = name,
-        image = 'quay.io/mmoltras/devcontainers:falco-libs-fedora',
+        image = 'quay.io/mmoltras/devcontainers:falco-libs',
         workingDir = repo_path,
         command = { '/bin/bash' },
         env = {

@@ -1,0 +1,29 @@
+FROM quay.io/stackrox-io/collector-builder:master
+
+RUN dnf install -y epel-release && \
+    dnf install -y \
+        ccache \
+        clang-tools-extra \
+        clang-analyzer \
+        podman-docker \
+        zsh && \
+    dnf clean all && \
+    echo 'export MAKEFLAGS="-j$(nproc)"' >> /root/.bashrc && \
+    # Clone my configuration
+    git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
+    # Install NeoVim
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
+    tar -C /opt -xzf nvim-linux64.tar.gz && \
+    rm -f nvim-linux64.tar.gz && \
+    # Install starship.rs
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes && \
+    # Install my configuration
+    "${HOME}/.config/zsh/install.sh" && \
+    /opt/nvim-linux64/bin/nvim --headless "+Lazy! restore" +qa
+
+COPY clangd.yaml /root/.config/clangd/config.yaml
+
+# scan-view default port
+EXPOSE 8181
+
+ENTRYPOINT ["/usr/bin/zsh"]

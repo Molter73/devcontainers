@@ -1,5 +1,3 @@
-FALCO_BUILDER_FLAVOR ?= fedora
-
 .PHONY: clang-config
 clang-config:
 	envsubst < $(CURDIR)/clangd.tpl.yaml > $(CURDIR)/clangd.yaml
@@ -11,13 +9,13 @@ clean:
 .PHONY: build
 build: clang-config
 	docker build \
-		--tag quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR) \
-		-f $(CURDIR)/$(FALCO_BUILDER_FLAVOR).Dockerfile \
+		--tag quay.io/mmoltras/devcontainers:falco-libs \
+		-f Containerfile \
 		$(CURDIR)
 
 .PHONY: push
 push: build
-	docker push quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
+	docker push quay.io/mmoltras/devcontainers:falco-libs
 
 .PHONY: teardown
 teardown: clean
@@ -29,7 +27,6 @@ deploy: build teardown
 		-e CMAKE_EXPORT_COMPILE_COMMANDS="ON" \
 		-e HOST_ROOT="/host" \
 		-e FALCO_DIR="${HOME}/go/src/github.com/falcosecurity/libs" \
-		-e FALCO_BUILDER_FLAVOR="${FALCO_BUILDER_FLAVOR}" \
 		-w ${HOME}/go/src/github.com/falcosecurity/libs \
 		-v ${HOME}/go/src/github.com/falcosecurity/libs:${HOME}/go/src/github.com/falcosecurity/libs \
 		-v /usr/src:/usr/src \
@@ -42,4 +39,4 @@ deploy: build teardown
 		-v /var/run/docker.sock:/var/run/docker.sock \
 		-v /run/podman/podman.sock:/run/podman/podman.sock \
 		-v /run/podman/podman.sock:/host/run/podman/podman.sock \
-		quay.io/mmoltras/devcontainers:falco-libs-$(FALCO_BUILDER_FLAVOR)
+		quay.io/mmoltras/devcontainers:falco-libs

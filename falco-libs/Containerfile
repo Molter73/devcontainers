@@ -1,4 +1,4 @@
-FROM fedora:40
+FROM fedora:41
 
 RUN dnf install -y \
     gcc \
@@ -26,6 +26,9 @@ RUN dnf install -y \
     procps \
     python3-pip \
     kmod \
+    podman \
+    podman-docker \
+    zsh \
 # Debugging packages
     gdb \
     clang-analyzer \
@@ -51,26 +54,26 @@ RUN dnf install -y \
     kernel_version=$(uname -r) && \
     ln -s "/host/lib/modules/$kernel_version" "/lib/modules/$kernel_version" && \
     ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version" && \
-    ln -s $(which ccache) /usr/local/bin/gcc && \
-    ln -s $(which ccache) /usr/local/bin/g++ && \
-    echo "" > /etc/profile.d/ccache.sh
-
-# Install docker CLI
-RUN dnf config-manager --add-repo \
-    https://download.docker.com/linux/fedora/docker-ce.repo && \
-    dnf install -y docker-ce-cli && \
-    dnf clean all
-
 # Install emscripten
-RUN git clone https://github.com/emscripten-core/emsdk.git && \
+    git clone https://github.com/emscripten-core/emsdk.git && \
     cd emsdk && ./emsdk install latest && \
     ./emsdk activate latest && \
     echo 'export EMSDK_QUIET=1' >> /root/.bashrc && \
-    echo 'source /emsdk/emsdk_env.sh' >> /root/.bashrc
-
-ENV CC=/usr/local/bin/gcc
-ENV CXX=/usr/local/bin/g++
+    echo 'source /emsdk/emsdk_env.sh' >> /root/.bashrc && \
+# Clone my configuration
+    git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
+# Install NeoVim
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
+    tar -C /opt -xzf nvim-linux64.tar.gz && \
+    rm -f nvim-linux64.tar.gz && \
+# Install starship.rs
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes && \
+# Install my configuration
+    "${HOME}/.config/zsh/install.sh" && \
+    /opt/nvim-linux64/bin/nvim --headless "+Lazy! restore" +qa
 
 COPY clangd.yaml /root/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/local/bin/
 COPY compile-libs.sh /usr/local/bin/
+
+ENTRYPOINT ["/usr/bin/zsh"]
