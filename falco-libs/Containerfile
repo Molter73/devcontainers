@@ -1,51 +1,53 @@
 FROM fedora:41
 
 RUN dnf install -y \
-    gcc \
-    gcc-c++ \
-    ccache \
-    libasan \
-    libubsan \
-    bpftool \
-    libbpf-devel \
-    dnf-plugins-core \
-    git \
-    make \
-    cmake \
     autoconf \
     automake \
-    pkg-config \
-    patch \
-    ncurses-devel \
-    libtool \
-    elfutils-libelf-devel \
-    diffutils \
-    which \
-    perl-core \
+    bpftool \
+    ccache \
     clang \
-    procps \
-    python3-pip \
-    kmod \
+    cmake \
+    diffutils \
+    dnf-plugins-core \
+    elfutils-libelf-devel \
     fzf \
+    gcc \
+    gcc-c++ \
+    git \
+    inotify-tools \
+    kmod \
+    libasan \
+    libbpf-devel \
+    libtool \
+    libubsan \
+    make \
+    ncurses-devel \
+    patch \
+    perl-core \
+    pkg-config \
     podman \
     podman-docker \
+    procps \
+    python3-pip \
+    wget \
+    which \
     zsh \
 # Debugging packages
-    gdb \
     clang-analyzer \
     clang-tools-extra \
+    gdb \
 # Dependencies for falcosecurity/testing
     golang \
 # Dependencies needed to build falcosecurity/libs.
-    libb64-devel \
     c-ares-devel \
-    libcurl.x86_64 \
-    libcurl-devel.x86_64 \
     grpc-cpp \
     grpc-devel \
     grpc-plugins \
     jq-devel \
     jsoncpp-devel \
+    libb64-devel \
+    libcurl-devel.x86_64 \
+    libcurl.x86_64 \
     openssl-devel \
     tbb-devel \
     xz \
@@ -61,16 +63,23 @@ RUN dnf install -y \
     ./emsdk activate latest && \
     echo 'export EMSDK_QUIET=1' >> /root/.bashrc && \
     echo 'source /emsdk/emsdk_env.sh' >> /root/.bashrc && \
-# Clone my configuration
+    # Install my dev environment
+    # Clone my configuration
     git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
-# Install NeoVim
+    # Install NeoVim
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
     tar -C /opt -xzf nvim-linux64.tar.gz && \
     rm -f nvim-linux64.tar.gz && \
-# Install starship.rs
+    # Install tree-sitter
+    curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz && \
+    gunzip -c tree-sitter-linux-x64.gz > /usr/local/bin/tree-sitter && \
+    chmod +x /usr/local/bin/tree-sitter && \
+    rm -f tree-sitter-linux-x64.gz && \
+    # Install starship.rs
     curl -sS https://starship.rs/install.sh | sh -s -- --yes && \
-# Install my configuration
+    # Install my configuration
     "${HOME}/.config/zsh/install.sh" && \
+    "${HOME}/.config/scripts/install.sh" && \
     /opt/nvim-linux64/bin/nvim --headless "+Lazy! restore" +qa
 
 COPY clangd.yaml /root/.config/clangd/config.yaml
