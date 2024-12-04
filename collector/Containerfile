@@ -10,6 +10,7 @@ RUN dnf install -y epel-release && \
         podman-docker \
         zsh && \
     dnf clean all && \
+    # Install my dev environment
     # Clone my configuration
     git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
     # Install NeoVim

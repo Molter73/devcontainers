@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   build-and-push:
@@ -16,7 +18,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Build
+      run: |
+        make -C ${{ matrix.image }} build
+
     - name: Login to Quay.io
+      if: github.event_name != 'pull_request'
       uses: docker/login-action@v2
       with:
         registry: quay.io
@@ -24,5 +31,6 @@ jobs:
         password: ${{ secrets.QUAY_TOKEN }}
 
     - name: Build and push
+      if: github.event_name != 'pull_request'
       run: |
         make -C ${{ matrix.image }} push
