@@ -14,9 +14,9 @@ RUN dnf install -y epel-release && \
     # Clone my configuration
     git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
     # Install NeoVim
-    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
-    tar -C /opt -xzf nvim-linux64.tar.gz && \
-    rm -f nvim-linux64.tar.gz && \
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz && \
+    tar -C /opt -xzf nvim-linux-x86_64.tar.gz && \
+    rm -f nvim-linux-x86_64.tar.gz && \
     # Install tree-sitter
     curl -LO https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz && \
     gunzip -c tree-sitter-linux-x64.gz > /usr/local/bin/tree-sitter && \
@@ -27,7 +27,7 @@ RUN dnf install -y epel-release && \
     # Install my configuration
     "${HOME}/.config/zsh/install.sh" && \
     "${HOME}/.config/scripts/install.sh" && \
-    /opt/nvim-linux64/bin/nvim --headless "+Lazy! restore" +qa
+    /opt/nvim-linux-x86_64/bin/nvim --headless "+Lazy! restore" +qa
 
 COPY clangd.yaml /root/.config/clangd/config.yaml
 
