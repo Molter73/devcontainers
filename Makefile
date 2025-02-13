@@ -1,4 +1,4 @@
-SUFFIX ?= $(shell git rev-parse --short HEAD)
+include constants.Makefile
 
 .PHONY: all
 all: collector falco clean deploy

@@ -1,3 +1,5 @@
+include ../constants.Makefile
+
 BUILDER_IMAGE=quay.io/mmoltras/devcontainers:falco-libs
 
 .PHONY: clang-config
