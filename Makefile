@@ -1,3 +1,5 @@
+include constants.Makefile
+
 .PHONY: all
 all: collector falco clean deploy
 
