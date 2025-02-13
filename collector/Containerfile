@@ -8,7 +8,7 @@ RUN dnf install -y epel-release && \
         fzf \
         inotify-tools \
         podman-docker \
-        gcovr \
+        python-pip \
         zsh && \
     dnf clean all && \
     # Install my dev environment
