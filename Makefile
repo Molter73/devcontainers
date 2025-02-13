@@ -1,3 +1,5 @@
+SUFFIX ?= $(shell git rev-parse --short HEAD)
+
 .PHONY: all
 all: collector falco clean deploy
 

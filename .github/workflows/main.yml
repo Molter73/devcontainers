@@ -32,3 +32,8 @@ jobs:
     - name: Build and push
       run: |
         make -C ${{ matrix.image }} push
+
+    - name: Retag main branch and push
+      if: github.event_name == 'push'
+      run: |
+          make -C ${{ matrix.image }} tag-push-main

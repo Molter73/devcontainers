@@ -1,3 +1,5 @@
+BUILDER_IMAGE=quay.io/mmoltras/devcontainers:falco-libs
+
 .PHONY: clang-config
 clang-config:
 	envsubst < $(CURDIR)/clangd.tpl.yaml > $(CURDIR)/clangd.yaml
@@ -9,17 +11,22 @@ clean:
 .PHONY: build
 build: clang-config
 	docker build \
-		--tag quay.io/mmoltras/devcontainers:falco-libs \
+		--tag $(BUILDER_IMAGE)-$(SUFFIX) \
 		-f Containerfile \
 		$(CURDIR)
 
 .PHONY: push
 push: build
-	docker push quay.io/mmoltras/devcontainers:falco-libs
+	docker push $(BUILDER_IMAGE)-$(SUFFIX)
 
 .PHONY: teardown
 teardown: clean
 	docker rm -f libs-builder
+
+.PHONY: tag-push-main
+tag-push-main: build
+	docker tag $(BUILDER_IMAGE)-$(SUFFIX) $(BUILDER_IMAGE)
+	docker push $(BUILDER_IMAGE)
 
 .PHONY: deploy
 deploy: build teardown
