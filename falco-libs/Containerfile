@@ -1,5 +1,8 @@
 FROM fedora:41
 
+ARG DEFAULT_GROUP
+ARG DEFAULT_USER
+
 RUN dnf install -y \
     autoconf \
     automake \
@@ -29,6 +32,7 @@ RUN dnf install -y \
     podman-docker \
     procps \
     python3-pip \
+    sudo \
     wget \
     which \
     zsh \
@@ -53,19 +57,9 @@ RUN dnf install -y \
     xz \
     zlib-devel && \
     dnf clean all && \
-# Set some symlinks to allow building of drivers.
-    kernel_version=$(uname -r) && \
-    ln -s "/host/lib/modules/$kernel_version" "/lib/modules/$kernel_version" && \
-    ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version" && \
-# Install emscripten
-    git clone https://github.com/emscripten-core/emsdk.git && \
-    cd emsdk && ./emsdk install latest && \
-    ./emsdk activate latest && \
-    echo 'export EMSDK_QUIET=1' >> /root/.bashrc && \
-    echo 'source /emsdk/emsdk_env.sh' >> /root/.bashrc && \
-    # Install my dev environment
-    # Clone my configuration
-    git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
+    groupadd -g $DEFAULT_GROUP molter && \
+    useradd -m -l -u $DEFAULT_USER -g molter molter && \
+    echo 'molter        ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers && \
     # Install NeoVim
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz && \
     tar -C /opt -xzf nvim-linux-x86_64.tar.gz && \
@@ -75,14 +69,32 @@ RUN dnf install -y \
     gunzip -c tree-sitter-linux-x64.gz > /usr/local/bin/tree-sitter && \
     chmod +x /usr/local/bin/tree-sitter && \
     rm -f tree-sitter-linux-x64.gz && \
+# Set some symlinks to allow building of drivers.
+    kernel_version=$(uname -r) && \
+    ln -s "/host/lib/modules/$kernel_version" "/lib/modules/$kernel_version" && \
+    ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version"
+
+USER molter
+WORKDIR /home/molter
+
+# Install emscripten
+RUN git clone https://github.com/emscripten-core/emsdk.git && \
+    cd emsdk && ./emsdk install latest && \
+    ./emsdk activate latest && \
+    echo 'export EMSDK_QUIET=1' >> /home/molter/.bashrc && \
+    echo 'source /emsdk/emsdk_env.sh' >> /home/molter/.bashrc && \
+    # Install my dev environment
+    # Clone my configuration
+    git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
     # Install starship.rs
     curl -sS https://starship.rs/install.sh | sh -s -- --yes && \
     # Install my configuration
+    rm -f "${HOME}/.zshrc" && \
     "${HOME}/.config/zsh/install.sh" && \
     "${HOME}/.config/scripts/install.sh" && \
     /opt/nvim-linux-x86_64/bin/nvim --headless "+Lazy! restore" +qa
 
-COPY clangd.yaml /root/.config/clangd/config.yaml
+COPY clangd.yaml /home/molter/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/local/bin/
 COPY compile-libs.sh /usr/local/bin/
 

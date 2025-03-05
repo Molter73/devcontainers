@@ -6,6 +6,18 @@ local falco_repo = os.getenv('GOPATH') .. '/src/github.com/falcosecurity/falco'
 local collector = require('collector')
 local falco = require('falco')
 
+local read_id = function(arg)
+    local cmd = 'id ' .. arg
+    local p = io.popen(cmd, 'r')
+    assert(p ~= nil, 'failed to run "' .. cmd .. '"')
+    local out = p:read('*n')
+    p:close()
+    return out
+end
+
+local user = read_id('-u')
+local group = read_id('-g')
+
 local collector_claim = collector.volume_claim()
 local falco_claim = falco.volume_claim()
 local volumes = {
@@ -35,6 +47,8 @@ local collector_opts = {
         { mountPath = '/root/.cache/ccache', name = 'collector-ccache', },
         { mountPath = collector_repo,        name = 'collector-repo', },
     },
+    user = user,
+    group = group,
 }
 
 local falco_opts = {
@@ -52,7 +66,9 @@ local falco_opts = {
         { mountPath = falco_libs_repo,        name = 'falco-libs-repo', },
         { mountPath = falco_testing_repo,     name = 'falco-testing-repo', },
         { mountPath = falco_repo,             name = 'falco-repo', },
-    }
+    },
+    user = user,
+    group = group,
 }
 
 local metadata = {

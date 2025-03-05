@@ -10,6 +10,8 @@ clean:
 build: clang-config
 	docker build \
 		--tag quay.io/mmoltras/devcontainers:falco-libs \
+		--build-arg DEFAULT_GROUP=$(shell id -g) \
+		--build-arg DEFAULT_USER=$(shell id -u) \
 		-f Containerfile \
 		$(CURDIR)
 
