@@ -23,6 +23,11 @@ Diagnostics:
       readability-identifier-naming.GlobalConstantCase: UPPER_CASE
 InlayHints:
   Enabled: Yes
+  BlockEnd: No
+  Designators: Yes
+  ParameterNames: No
+  DeducedTypes: Yes
+  DefaultArguments: No
 ---
 If:
   PathMatch: .*Test\.cpp
