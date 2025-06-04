@@ -1,0 +1,10 @@
+builder-image := "quay.io/mmoltras/devcontainers:collector"
+
+build:
+    docker build \
+        --tag {{builder-image}} \
+        -f Containerfile \
+        `pwd`
+
+push:
+    docker push {{builder-image}}

@@ -17,10 +17,12 @@ jobs:
         - falco-libs
     steps:
     - uses: actions/checkout@v3
+    - uses: taiki-e/install-action@just
+
 
     - name: Build
       run: |
-        make -C ${{ matrix.image }} build
+        just ${{ matrix.image }}/build
 
     - name: Login to Quay.io
       if: github.event_name != 'pull_request'
@@ -33,4 +35,4 @@ jobs:
     - name: Build and push
       if: github.event_name != 'pull_request'
       run: |
-        make -C ${{ matrix.image }} push
+        just ${{ matrix.image }}/push

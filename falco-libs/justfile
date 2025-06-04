@@ -1,0 +1,18 @@
+image := "quay.io/mmoltras/devcontainers:falco-libs"
+template := `pwd` / 'clangd.tpl.yaml'
+clangd := `pwd` / 'clangd.yaml'
+
+build: clang-config
+    docker build \
+        --tag {{image}} \
+        -f Containerfile \
+        `pwd`
+
+clang-config: clean
+    @envsubst < {{template}} > {{clangd}}
+
+clean:
+    @rm -f {{clangd}}
+
+push:
+    docker push {{image}}
