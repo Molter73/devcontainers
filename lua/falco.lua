@@ -18,8 +18,6 @@ M.setup = function(opts)
         volumeMounts = opts.volumes or {},
         securityContext = {
             privileged = true,
-            runAsUser = opts.user,
-            runAsGroup = opts.group,
         },
         stdin = true,
         tty = true,

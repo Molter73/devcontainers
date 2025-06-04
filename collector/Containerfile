@@ -1,10 +1,7 @@
 FROM quay.io/stackrox-io/collector-builder:master
 
-ARG DEFAULT_GROUP
-ARG DEFAULT_USER
-
 RUN dnf install -y epel-release && \
-    dnf install -y \
+    dnf install -y --nobest \
         ccache \
         clang-analyzer \
         clang-tools-extra \
@@ -14,9 +11,6 @@ RUN dnf install -y epel-release && \
         sudo \
         zsh && \
     dnf clean all && \
-    groupadd -g $DEFAULT_GROUP molter && \
-    useradd -m -l -u $DEFAULT_USER -g molter molter && \
-    echo 'molter        ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers && \
     # Install NeoVim
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz && \
     tar -C /opt -xzf nvim-linux-x86_64.tar.gz && \
@@ -26,9 +20,6 @@ RUN dnf install -y epel-release && \
     gunzip -c tree-sitter-linux-x64.gz > /usr/local/bin/tree-sitter && \
     chmod +x /usr/local/bin/tree-sitter && \
     rm -f tree-sitter-linux-x64.gz
-
-USER molter
-WORKDIR /home/molter
 
 # Install my dev environment
 RUN git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
@@ -40,7 +31,7 @@ RUN git clone https://github.com/molter73/dotfiles "${HOME}/.config" && \
     "${HOME}/.config/scripts/install.sh" && \
     /opt/nvim-linux-x86_64/bin/nvim --headless "+Lazy! restore" +qa
 
-COPY clangd.yaml /home/molter/.config/clangd/config.yaml
+COPY clangd.yaml /root/.config/clangd/config.yaml
 
 # scan-view default port
 EXPOSE 8181

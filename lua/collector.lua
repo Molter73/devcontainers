@@ -14,11 +14,6 @@ M.setup = function(opts)
             { name = 'COLLECTOR_HOST_ROOT',           value = '/host' },
         },
         volumeMounts = opts.volumes or {},
-        securityContext = {
-            privileged = true,
-            runAsUser = opts.user,
-            runAsGroup = opts.group,
-        },
         ports = {
             { containerPort = 8181, hostIP = '0.0.0.0', hostPort = 8181 },
         },

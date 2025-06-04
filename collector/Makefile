@@ -4,8 +4,6 @@ BUILDER_IMAGE=quay.io/mmoltras/devcontainers:collector
 build:
 	docker build \
 		--tag $(BUILDER_IMAGE) \
-		--build-arg DEFAULT_GROUP=$(shell id -g) \
-		--build-arg DEFAULT_USER=$(shell id -u) \
 		-f Containerfile \
 		$(CURDIR)
 

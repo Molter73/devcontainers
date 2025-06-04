@@ -1,21 +1,27 @@
 Diagnostics:
   ClangTidy:
     Add:
-    - bugprone*
-    - cppcoreguidelines*
-    - modernize*
-    - performance*
-    - readability*
+    - bugprone-*
+    - clang-analyzer-*
+    - concurrency-*
+    - cppcoreguidelines-*
+    - modernize-*
+    - performance-*
+    - readability-*
     Remove:
     - readability-identifier-length
     - modernize-use-nodiscard
     - modernize-use-trailing-return-type
+    - modernize-avoid-c-arrays
     - cppcoreguidelines-avoid-magic-numbers
+    - readability-identifier-length
+    - readability-magic-numbers
     CheckOptions:
       readability-identifier-naming.NamespaceCase: lower_case
       readability-identifier-naming.ClassCase: CamelCase
       readability-identifier-naming.MethodCase: CamelCase
       readability-identifier-naming.MemberCase: lower_case
+      readability-identifier-naming.ProtectedMemberSuffix: _
       readability-identifier-naming.PrivateMemberSuffix: _
       readability-identifier-naming.StructCase: CamelCase
       readability-identifier-naming.FunctionCase: CamelCase
