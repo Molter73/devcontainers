@@ -1,5 +1,8 @@
 FROM fedora:41
 
+ARG DEFAULT_GROUP
+ARG DEFAULT_USER
+
 RUN dnf install -y \
     autoconf \
     automake \
@@ -54,6 +57,9 @@ RUN dnf install -y \
     xz \
     zlib-devel && \
     dnf clean all && \
+    groupadd -g $DEFAULT_GROUP molter && \
+    useradd -m -l -u $DEFAULT_USER -g molter molter && \
+    echo 'molter        ALL=(ALL)       NOPASSWD: ALL' >> /etc/sudoers && \
     # Install NeoVim
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz && \
     tar -C /opt -xzf nvim-linux-x86_64.tar.gz && \
@@ -67,6 +73,9 @@ RUN dnf install -y \
     kernel_version=$(uname -r) && \
     ln -s "/host/lib/modules/$kernel_version" "/lib/modules/$kernel_version" && \
     ln -s "/host/usr/src/kernels/$kernel_version" "/usr/src/kernels/$kernel_version"
+
+USER molter
+WORKDIR /home/molter
 
 # Install emscripten
 RUN git clone https://github.com/emscripten-core/emsdk.git && \
@@ -85,7 +94,7 @@ RUN git clone https://github.com/emscripten-core/emsdk.git && \
     "${HOME}/.config/scripts/install.sh" && \
     /opt/nvim-linux-x86_64/bin/nvim --headless "+Lazy! restore" +qa
 
-COPY clangd.yaml /root/.config/clangd/config.yaml
+COPY clangd.yaml /home/molter/.config/clangd/config.yaml
 COPY compile-falco.sh /usr/local/bin/
 COPY compile-libs.sh /usr/local/bin/
 

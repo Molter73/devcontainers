@@ -5,6 +5,8 @@ clangd := `pwd` / 'clangd.yaml'
 build: clang-config
     docker build \
         --tag {{image}} \
+        --build-arg DEFAULT_GROUP=`id -g` \
+        --build-arg DEFAULT_USER=`id -u` \
         -f Containerfile \
         `pwd`
 

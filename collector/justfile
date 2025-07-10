@@ -3,6 +3,8 @@ builder-image := "quay.io/mmoltras/devcontainers:collector"
 build:
     docker build \
         --tag {{builder-image}} \
+        --build-arg DEFAULT_GROUP=`id -g` \
+        --build-arg DEFAULT_USER=`id -u` \
         -f Containerfile \
         `pwd`
 
